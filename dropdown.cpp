@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Window/Event.hpp>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -41,7 +42,7 @@ public:
         window.create(sf::VideoMode(width, height), "dropdown", sf::Style::None);
         window.setPosition(sf::Vector2i(posX, posY));
     }
-
+    
     void addMenuOption(const std::string& text, const std::string& command) {
         menuOptions.emplace_back(text, command);
     }
@@ -50,6 +51,31 @@ public:
         menuOptions.emplace_back("spacer", "");
     }
 
+    int PollEvent(sf::Event event) {
+        if (event.type == sf::Event::Closed) {
+            window.close();
+        } else if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (mousePos.x < 0 || mousePos.x > width || mousePos.y < 0 || mousePos.y > height) {
+                    window.close();
+                    return 1;
+                }
+                
+                int y = event.mouseButton.y;
+                int clickedIndex = y / SPACING;
+                if (clickedIndex >= 0 && clickedIndex < menuOptions.size()) {
+                    const auto& [text, command] = menuOptions[clickedIndex];
+                    if (!command.empty() && text != "spacer") {
+                        std::system((command + " &").c_str());
+                        window.close();
+                        return 1;
+                    }
+                }
+            }
+        } return 0;
+    }
+    
     void run() {
         sf::Font font;
         if (!font.loadFromFile("~/.config/macos/fonts/SF-Pro.ttf")) {
@@ -58,30 +84,8 @@ public:
 
         while (window.isOpen()) {
             sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                } else if (event.type == sf::Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                        if (mousePos.x < 0 || mousePos.x > width || mousePos.y < 0 || mousePos.y > height) {
-                            window.close();
-                            break;
-                        }
-
-                        int y = event.mouseButton.y;
-                        int clickedIndex = y / SPACING;
-                        if (clickedIndex >= 0 && clickedIndex < menuOptions.size()) {
-                            const auto& [text, command] = menuOptions[clickedIndex];
-                            if (!command.empty() && text != "spacer") {
-                                std::system((command + " &").c_str());
-                                window.close();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            while (window.pollEvent(event))
+                if(PollEvent(event)) break;
 
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
