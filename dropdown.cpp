@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window/Event.hpp>
+#include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <array>
@@ -55,8 +56,8 @@ class DropdownPanel {
             window.close();
             return 0;
         }
-        if (event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Left) {
+        if (event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (mousePos.x < 0 || mousePos.x >= width ||
                     mousePos.y < 0 || mousePos.y >= height) {
@@ -75,7 +76,7 @@ class DropdownPanel {
                     }
                 }
             }
-        } return 0;
+         return 0;
     }
     
     void run() {
@@ -105,7 +106,8 @@ class DropdownPanel {
                 }
 
                 if (text == "spacer") {
-                    sf::Text spacer = createText(std::string('_', 40), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
+                    std::string str(38, '_');
+                    sf::Text spacer = createText(str.c_str(), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
                     spacer.setFillColor(sf::Color(128, 128, 128));
                     window.draw(spacer);
                 } else {
