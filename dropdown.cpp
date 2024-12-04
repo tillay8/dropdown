@@ -7,17 +7,17 @@
 #include <cstdlib>
 #include <array>
 #include <string>
-
+using std::string;
 class DropdownPanel {
     private:
     sf::RenderWindow window;
     sf::Color backgroundColor, highlightColor;
     int width, height, posX, posY;
-    std::vector<std::pair<std::string, std::string>> menuOptions;
+    std::vector<std::pair<string, string>> menuOptions;
     const int FONT_SIZE = 16;
     const int SPACING = 20;
 
-    sf::Text createText(const std::string& text, sf::Font& font, int size, int x, int y) {
+    sf::Text createText(const string& text, sf::Font& font, int size, int x, int y) {
         sf::Text menuText;
         menuText.setFont(font);
         menuText.setString(text);
@@ -43,7 +43,7 @@ class DropdownPanel {
         window.setPosition(sf::Vector2i(posX, posY));
     }
     
-    void addMenuOption(const std::string& text, const std::string& command) {
+    void addMenuOption(const string& text, const string& command) {
         menuOptions.emplace_back(text, command);
     }
 
@@ -106,7 +106,7 @@ class DropdownPanel {
                 }
 
                 if (text == "spacer") {
-                    std::string str(38, '_');
+                    string str(30, '_');
                     sf::Text spacer = createText(str.c_str(), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
                     spacer.setFillColor(sf::Color(128, 128, 128));
                     window.draw(spacer);
@@ -167,7 +167,7 @@ int browser() {
 }
 
 int main(int argc, char* argv[]) {
-    std::string flag = std::string(argv[1]);
+    string flag(argv[1]);
     if (flag == "--apple") {
         return apple();
     } else if (flag == "--browser") {
