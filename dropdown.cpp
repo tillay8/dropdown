@@ -2,14 +2,13 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window/Event.hpp>
-#include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <array>
 #include <string>
 
 class DropdownPanel {
-private:
+    private:
     sf::RenderWindow window;
     sf::Color backgroundColor, highlightColor;
     int width, height, posX, posY;
@@ -34,7 +33,7 @@ private:
         return rect;
     }
 
-public:
+    public:
     DropdownPanel(const std::array<int, 4>& dimensions, sf::Color bgColor, sf::Color hlColor = sf::Color(100, 149, 237))
         : posX(dimensions[0]), posY(dimensions[1]),
           width(dimensions[2]), height(dimensions[3]),
@@ -54,10 +53,13 @@ public:
     int PollEvent(sf::Event event) {
         if (event.type == sf::Event::Closed) {
             window.close();
-        } else if (event.type == sf::Event::MouseButtonPressed) {
+            return 0;
+        }
+        if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (mousePos.x < 0 || mousePos.x > width || mousePos.y < 0 || mousePos.y > height) {
+                if (mousePos.x < 0 || mousePos.x >= width ||
+                    mousePos.y < 0 || mousePos.y >= height) {
                     window.close();
                     return 1;
                 }
@@ -78,7 +80,7 @@ public:
     
     void run() {
         sf::Font font;
-        if (!font.loadFromFile("~/.config/macos/fonts/SF-Pro.ttf")) {
+        if (!font.loadFromFile("./SF-Pro.ttf")) {
             return;
         }
 
@@ -103,7 +105,7 @@ public:
                 }
 
                 if (text == "spacer") {
-                    sf::Text spacer = createText("________________________________________", font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
+                    sf::Text spacer = createText(std::string('_', 40), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
                     spacer.setFillColor(sf::Color(128, 128, 128));
                     window.draw(spacer);
                 } else {
@@ -163,7 +165,7 @@ int browser() {
 }
 
 int main(int argc, char* argv[]) {
-    std::string flag = argv[1];
+    std::string flag = std::string(argv[1]);
     if (flag == "--apple") {
         return apple();
     } else if (flag == "--browser") {
