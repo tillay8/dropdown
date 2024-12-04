@@ -52,7 +52,7 @@ public:
 
     void run() {
         sf::Font font;
-        if (!font.loadFromFile("/home/tilley/.config/macos/fonts/SF-Pro.ttf")) {
+        if (!font.loadFromFile("~/.config/macos/fonts/SF-Pro.ttf")) {
             return;
         }
 
