@@ -79,11 +79,10 @@ class DropdownPanel {
          return 0;
     }
     
-    void run() {
+    int run() {
         sf::Font font;
-        if (!font.loadFromFile("./SF-Pro.ttf")) {
-            return;
-        }
+        if (!font.loadFromFile("./SF-Pro.ttf"))
+            return 1;
 
         while (window.isOpen()) {
             sf::Event event;
@@ -118,6 +117,7 @@ class DropdownPanel {
 
             window.display();
         }
+        return 0;
     }
 };
 
@@ -139,9 +139,8 @@ int apple() {
     panel.addMenuOption("Shut Down...", "echo 'Shut Down...'");
     panel.addSpacer();
     panel.addMenuOption("Lock Screen", "echo 'Lock Screen'");
-    panel.run();
 
-    return 0;
+    return panel.run();
 }
 
 int browser() {
@@ -161,9 +160,8 @@ int browser() {
     panel.addMenuOption("Extensions", "echo 'Extensions'");
     panel.addSpacer();
     panel.addMenuOption("Help", "echo 'Help'");
-    panel.run();
-
-    return 0;
+    
+    return panel.run();
 }
 
 int main(int argc, char* argv[]) {
