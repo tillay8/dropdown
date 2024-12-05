@@ -57,13 +57,8 @@ class DropdownPanel {
             window.close();
             return 0;
         }
-        if(event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-           event.type == sf::Event::LostFocus){
-            window.close();
-            return 0;
-        }
 
-        if (event.type == sf::Event::MouseButtonPressed &&
+        if (/*event.type == sf::Event::MouseButtonPressed */ sf::Mouse::isButtonPressed(sf::Mouse::Left)&&
             event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (mousePos.x < 0 || mousePos.x >= width ||
