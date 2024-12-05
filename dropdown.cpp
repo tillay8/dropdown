@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -52,8 +53,12 @@ class DropdownPanel {
     }
 
     int PollEvent(sf::Event event) {
-        if (event.type == sf::Event::Closed ||
-            event.type == sf::Event::LostFocus) {
+        if (event.type == sf::Event::Closed) {
+            window.close();
+            return 0;
+        }
+        if(event.type == sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+           event.type == sf::Event::LostFocus){
             window.close();
             return 0;
         }
