@@ -52,7 +52,8 @@ class DropdownPanel {
     }
 
     int PollEvent(sf::Event event) {
-        if (event.type == sf::Event::Closed || event.type == sf::Event::LostFocus) {
+        if (event.type == sf::Event::Closed ||
+            event.type == sf::Event::LostFocus) {
             window.close();
             return 0;
         }
@@ -79,6 +80,28 @@ class DropdownPanel {
             }
          return 0;
     }
+
+    void renderMenuOption(int i, sf::Font& font) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        const auto& [text, command] = menuOptions[i];
+        int itemY = i * SPACING;
+        
+        if (text == "spacer") {
+            string str(30, '_');
+            sf::Text spacer = createText(str.c_str(), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
+            spacer.setFillColor(sf::Color(128, 128, 128));
+            window.draw(spacer);
+        } else {
+            if(mousePos.x >= 0 && mousePos.x <= width &&
+               mousePos.y >= itemY &&
+               mousePos.y <= itemY + SPACING) {
+                sf::RectangleShape highlightRect = createHighlightRect(8, itemY, width - 16, SPACING - 4);
+                window.draw(highlightRect);
+            }
+            sf::Text menuText = createText(text, font, FONT_SIZE, 10, itemY + 4);
+            window.draw(menuText);
+        }
+    }
     
     int run() {
         sf::Font font;
@@ -90,30 +113,10 @@ class DropdownPanel {
             while (window.pollEvent(event))
                 if(PollEvent(event)) break;
 
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-
             window.clear(backgroundColor);
 
-            for (size_t i = 0; i < menuOptions.size(); ++i) {
-                const auto& [text, command] = menuOptions[i];
-                int itemY = i * SPACING;
-
-                if (text == "spacer") {
-                    string str(30, '_');
-                    sf::Text spacer = createText(str.c_str(), font, FONT_SIZE - 4, 10, itemY + SPACING / 8);
-                    spacer.setFillColor(sf::Color(128, 128, 128));
-                    window.draw(spacer);
-                } else {
-                    if(mousePos.x >= 0 && mousePos.x <= width &&
-                       mousePos.y >= itemY &&
-                       mousePos.y <= itemY + SPACING) {
-                        sf::RectangleShape highlightRect = createHighlightRect(8, itemY, width - 16, SPACING - 4);
-                        window.draw(highlightRect);
-                    }
-                    sf::Text menuText = createText(text, font, FONT_SIZE, 10, itemY + 4);
-                    window.draw(menuText);
-                }
-            }
+            for (size_t i = 0; i < menuOptions.size(); ++i)
+                renderMenuOption(i, font);
 
             window.display();
         }
