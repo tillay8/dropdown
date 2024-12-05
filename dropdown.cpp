@@ -52,10 +52,11 @@ class DropdownPanel {
     }
 
     int PollEvent(sf::Event event) {
-        if (event.type == sf::Event::Closed) {
+        if (event.type == sf::Event::Closed || event.type == sf::Event::LostFocus) {
             window.close();
             return 0;
         }
+
         if (event.type == sf::Event::MouseButtonPressed &&
             event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
